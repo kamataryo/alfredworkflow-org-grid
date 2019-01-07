@@ -5,25 +5,24 @@ meta:
   browser: chrome
 
 organizations:
-  - id: sumomo
+  - name: sumomo
     short: sumo
-  - id: komomo
+  - name: komomo
     short: komo
 
 grid:
   sumomo:
-    github: true
-    slack: sumomo-inc
-    gmail: https://example.com/
+    github: true # URL | true | string
+    slack: sumomo-inc # URL | true | string
+    gmail: https://example.com/ # URL | number
     aws: sumomo
-    gcp: ''
-    azure: '...'
-    backlog: '...'
+    gcp: 0 # URL | number
+    backlog: true # URL | true | string
     _customs:
-      - id: jobcan
+      - name: jobcan
         short: jc
         url: https://example.com/jobcan
-      - id: foo
+      - name: foo
         url: https://example.com/sumomo/foo
   komomo:
     github: true
