@@ -1,0 +1,30 @@
+# This is sample config file.
+# Please customize me
+
+meta:
+  browser: chrome
+
+organizations:
+  - id: sumomo
+    short: sumo
+  - id: komomo
+    short: komo
+
+grid:
+  sumomo:
+    github: true
+    slack: sumomo-inc
+    gmail: https://example.com/
+    aws: sumomo
+    gcp: ''
+    azure: '...'
+    backlog: '...'
+    _customs:
+      - id: jobcan
+        short: jc
+        url: https://example.com/jobcan
+      - id: foo
+        url: https://example.com/sumomo/foo
+  komomo:
+    github: true
+    slack: true

@@ -1,0 +1,17 @@
+{
+  "name": "alfredworkflow-org-grid",
+  "version": "0.0.0",
+  "description": "Generate alfredworkflow",
+  "bin": "cli.js",
+  "os": [
+    "darwin"
+  ],
+  "author": "kamataryo <mugil.cephalus+github.com@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "repository": "git@github.com:kamataryo/alfredworkflow-org-grid.git",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "js-yaml": "^3.12.1"
+  }
+}
