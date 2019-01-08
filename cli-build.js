@@ -52,6 +52,14 @@ Object.keys(grid).forEach(orgname => {
   )
 })
 
+const uids = [
+  ...Object.keys(commands).map(url => commands[url].uid),
+  ...Object.values(commands)
+    .map(({ values }) => values)
+    .reduce((prev, current) => [...prev, ...current], [])
+    .map(({ uid }) => uid)
+]
+
 const jsonPlist = {
   bundleid: '',
   category: 'Tools',
@@ -63,15 +71,18 @@ const jsonPlist = {
     const destinationuid = commands[url].uid
     const keys = commands[url].values.map(({ uid }) => uid)
     return {
+      ...prev,
       ...keys.reduce(
         (prev, key) => ({
           ...prev,
-          [key]: {
-            destinationuid,
-            modifiers: 0,
-            modifiersubtext: '',
-            vitoclose: false
-          }
+          [key]: [
+            {
+              destinationuid,
+              modifiers: 0,
+              modifiersubtext: '',
+              vitoclose: false
+            }
+          ]
         }),
         {}
       )
@@ -92,7 +103,7 @@ const jsonPlist = {
           argumenttype: 1,
           keyword: command.join(' '),
           subtext: '',
-          text: 'some text',
+          text: command.join(' '),
           withspace: true
         },
         type: 'alfred.workflow.input.keyword',
@@ -101,11 +112,23 @@ const jsonPlist = {
       }))
   ],
   readme: '',
-  uidata: {},
+  uidata: uids.reduce(
+    (prev, uid) => ({
+      ...prev,
+      [uid]: {
+        xpos: Math.floor(Math.random() * 1000),
+        ypos: Math.floor(Math.random() * 1000)
+      }
+    }),
+    {}
+  ),
   webaddress: ''
 }
+
+fs.writeFileSync('./dist/info.json', JSON.stringify(jsonPlist, null, 2))
+
 fs.writeFileSync(
-  './org-grid.alfredworkflow',
+  './dist/info.plist',
   // '~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/workflows/org-grid.alfredworkflow',
   plist.build(jsonPlist)
 )
