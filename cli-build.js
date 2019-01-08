@@ -1,5 +1,7 @@
 yaml = require('js-yaml')
 fs = require('fs')
+const plist = require('plist')
+const uuidv4 = require('uuid/v4')
 const permitation = require('./lib/permitation')
 const parse = require('./lib/parse')
 const { CONFIG_FILE_PATH, SHORT_SERVICE_NAMES } = require('./constants')
@@ -27,21 +29,83 @@ Object.keys(grid).forEach(orgname => {
       const url = parse(services[serviceName], orgname, serviceName)
       const shortServiceName = SHORT_SERVICE_NAMES[serviceName]
 
-      commands[url] = permitation(
-        [orgname, shortOrgname],
-        [serviceName, shortServiceName]
-      )
+      commands[url] = {
+        uid: uuidv4(),
+        values: permitation(
+          [orgname, shortOrgname],
+          [serviceName, shortServiceName]
+        ).map(command => ({ command, uid: uuidv4() }))
+      }
     })
 
   const customs = services._customs || {}
   Object.keys(customs).forEach(
     ({ url, name: serviceName, short: shortServiceName }) => {
-      commands[url] = permitation(
-        [orgname, shortOrgname],
-        [serviceName, shortServiceName]
-      )
+      commands[url] = {
+        uid: uuidv4(),
+        values: permitation(
+          [orgname, shortOrgname],
+          [serviceName, shortServiceName]
+        ).map(command => ({ command, uid: uuidv4() }))
+      }
     }
   )
 })
 
-console.log(commands)
+const jsonPlist = {
+  bundleid: '',
+  category: 'Tools',
+  createdby: 'Generator: Alfredworkflow org grid',
+  description: '',
+  disabled: false,
+  name: 'Org Grid',
+  connections: Object.keys(commands).reduce((prev, url) => {
+    const destinationuid = commands[url].uid
+    const keys = commands[url].values.map(({ uid }) => uid)
+    return {
+      ...keys.reduce(
+        (prev, key) => ({
+          ...prev,
+          [key]: {
+            destinationuid,
+            modifiers: 0,
+            modifiersubtext: '',
+            vitoclose: false
+          }
+        }),
+        {}
+      )
+    }
+  }, {}),
+  objects: [
+    ...Object.keys(commands).map(url => ({
+      config: { browser: '', spaces: '', url, utf8: true },
+      type: 'alfred.workflow.action.openurl',
+      uid: commands[url].uid,
+      version: 1
+    })),
+    ...Object.values(commands)
+      .map(({ values }) => values)
+      .reduce((prev, current) => [...prev, ...current], [])
+      .map(({ command, uid }) => ({
+        config: {
+          argumenttype: 1,
+          keyword: command.join(' '),
+          subtext: '',
+          text: 'some text',
+          withspace: true
+        },
+        type: 'alfred.workflow.input.keyword',
+        uid,
+        version: 1
+      }))
+  ],
+  readme: '',
+  uidata: {},
+  webaddress: ''
+}
+fs.writeFileSync(
+  './org-grid.alfredworkflow',
+  // '~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/workflows/org-grid.alfredworkflow',
+  plist.build(jsonPlist)
+)

@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Generate alfredworkflow",
   "bin": "cli.js",
+  "engines": {
+    "node": ">=8"
+  },
   "os": [
     "darwin"
   ],
@@ -11,7 +14,10 @@
   "private": false,
   "repository": "git@github.com:kamataryo/alfredworkflow-org-grid.git",
   "dependencies": {
+    "alfy": "^0.8.0",
     "commander": "^2.19.0",
-    "js-yaml": "^3.12.1"
+    "js-yaml": "^3.12.1",
+    "plist": "^3.0.1",
+    "uuid": "^3.3.2"
   }
 }
