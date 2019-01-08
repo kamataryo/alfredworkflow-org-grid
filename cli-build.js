@@ -125,8 +125,6 @@ const jsonPlist = {
   webaddress: ''
 }
 
-fs.writeFileSync('./dist/info.json', JSON.stringify(jsonPlist, null, 2))
-
 fs.writeFileSync(
   './dist/info.plist',
   // '~/Library/Application\\ Support/Alfred\\ 3/Alfred.alfredpreferences/workflows/org-grid.alfredworkflow',
