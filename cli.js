@@ -10,4 +10,5 @@ program
   .command('build', 'build and install your org grid alfred workflow', {
     isDefault: true
   })
+  .command('remove', 'remove Org Grid configfile')
   .parse(process.argv)
