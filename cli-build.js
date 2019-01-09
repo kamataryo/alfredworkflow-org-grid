@@ -37,9 +37,7 @@ Object.keys(grid).forEach(orgname => {
         ).map(command => ({ command, uid: uuidv4() }))
       }
     })
-
-  const customs = services._customs || {}
-  Object.keys(customs).forEach(
+  ;(services._customs || []).forEach(
     ({ url, name: serviceName, short: shortServiceName }) => {
       commands[url] = {
         uid: uuidv4(),
