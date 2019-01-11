@@ -14,8 +14,6 @@ const {
   grid
 } = config
 
-const definedOrgnames = organizations.map(org => org.name)
-
 const commands = {}
 
 Object.keys(grid).forEach(orgname => {
@@ -63,79 +61,85 @@ Object.keys(grid).forEach(orgname => {
   )
 })
 
+const connections = Object.keys(commands).reduce((prev, url) => {
+  const destinationuid = commands[url].uid
+  const uids = commands[url].values.map(({ uid }) => uid)
+  return {
+    ...prev,
+    ...uids.reduce(
+      (prev, key) => ({
+        ...prev,
+        [key]: [
+          {
+            destinationuid,
+            modifiers: 0,
+            modifiersubtext: '',
+            vitoclose: false
+          }
+        ]
+      }),
+      {}
+    )
+  }
+}, {})
+
+// list open url workflow destination
+const urlObjects = Object.keys(commands).map(url => ({
+  config: { browser: '', spaces: '', url, utf8: true },
+  type: 'alfred.workflow.action.openurl',
+  uid: commands[url].uid,
+  version: 1
+}))
+
+// lsit key input workflow source
+const inputObjects = Object.values(commands)
+  .map(({ values }) => values)
+  .reduce((prev, current) => [...prev, ...current], [])
+  .map(({ command, uid, description }) => ({
+    config: {
+      argumenttype: 1,
+      keyword: command.join(' '),
+      subtext: '',
+      text: description,
+      withspace: true
+    },
+    type: 'alfred.workflow.input.keyword',
+    uid,
+    version: 1
+  }))
+
 const uids = [
-  ...Object.keys(commands).map(url => commands[url].uid),
+  ...Object.keys(commands).map(url => ({
+    value: commands[url].uid,
+    type: 'openurl'
+  })),
   ...Object.values(commands)
     .map(({ values }) => values)
     .reduce((prev, current) => [...prev, ...current], [])
-    .map(({ uid }) => uid)
+    .map(({ uid }) => ({ value: uid, type: 'command' }))
 ]
+
+const uidata = uids.reduce((prev, { value: uid, type }, i) => {
+  return {
+    ...prev,
+    [uid]: {
+      xpos: type === 'command' ? 5 : 405,
+      ypos: i * 105
+    }
+  }
+}, {})
 
 const jsonPlist = {
   bundleid: '',
   category: 'Tools',
-  createdby: 'Generator: Alfredworkflow org grid',
-  description: '',
+  createdby: 'Generator: Alfredworkflow Org Grid',
+  description: 'Your organizations alfredworkflow shortcuts.',
   disabled: false,
   name: 'Org Grid',
-  connections: Object.keys(commands).reduce((prev, url) => {
-    const destinationuid = commands[url].uid
-    const keys = commands[url].values.map(({ uid }) => uid)
-    return {
-      ...prev,
-      ...keys.reduce(
-        (prev, key) => ({
-          ...prev,
-          [key]: [
-            {
-              destinationuid,
-              modifiers: 0,
-              modifiersubtext: '',
-              vitoclose: false
-            }
-          ]
-        }),
-        {}
-      )
-    }
-  }, {}),
-  objects: [
-    // list open url workflow destination
-    ...Object.keys(commands).map(url => ({
-      config: { browser: '', spaces: '', url, utf8: true },
-      type: 'alfred.workflow.action.openurl',
-      uid: commands[url].uid,
-      version: 1
-    })),
-    // lsit key input workflow source
-    //
-    ...Object.values(commands)
-      .map(({ values }) => values)
-      .reduce((prev, current) => [...prev, ...current], [])
-      .map(({ command, uid, description }) => ({
-        config: {
-          argumenttype: 1,
-          keyword: command.join(' '),
-          subtext: '',
-          text: description,
-          withspace: true
-        },
-        type: 'alfred.workflow.input.keyword',
-        uid,
-        version: 1
-      }))
-  ],
+  connections,
+  objects: [...urlObjects, ...inputObjects],
+  uidata,
   readme: '',
-  uidata: uids.reduce(
-    (prev, uid) => ({
-      ...prev,
-      [uid]: {
-        xpos: Math.floor(Math.random() * 1000),
-        ypos: Math.floor(Math.random() * 1000)
-      }
-    }),
-    {}
-  ),
   webaddress: ''
 }
 
