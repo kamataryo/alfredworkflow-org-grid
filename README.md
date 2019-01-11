@@ -10,3 +10,7 @@ Alfred workflow launcher shortcut management system.
 
 where to put:
 /Users/username/Dropbox/Alfred.alfredpreferences/workflows
+
+## For me
+
+cp ./dist/\* ~/Dropbox/Alfred.alfredpreferences/workflows/test
