@@ -5,7 +5,11 @@ const TEMPLATE_FILE_PATH = path.join(__dirname, CONFIG_FILE_NAME)
 const CONFIG_FILE_PATH = path.join(process.env['HOME'], CONFIG_FILE_NAME)
 
 const SHORT_SERVICE_NAMES = {
-  github: 'gh'
+  github: 'gh',
+  gmail: 'gm',
+  slack: 'sl',
+  'google-calendar': 'gc',
+  backlog: 'bl'
 }
 
 module.exports = {

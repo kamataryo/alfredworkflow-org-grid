@@ -15,6 +15,7 @@ grid:
     github: true # URL | true | string
     slack: sumomo-inc # URL | true | string
     gmail: https://example.com/ # URL | number
+    google-calendar: 1 # URL | number
     aws: sumomo
     gcp: 0 # URL | number
     backlog: true # URL | true | string
