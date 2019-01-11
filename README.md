@@ -13,4 +13,6 @@ where to put:
 
 ## For me
 
-cp ./dist/\* ~/Dropbox/Alfred.alfredpreferences/workflows/test
+```shell
+cp ./dist/* ~/Dropbox/Alfred.alfredpreferences/workflows/test
+```

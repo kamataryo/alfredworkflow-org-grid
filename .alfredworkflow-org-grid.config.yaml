@@ -12,7 +12,9 @@ organizations:
 
 grid:
   sumomo:
-    github: true # URL | true | string
+    github:
+      value: true # URL | true | string
+      description: 'My sumomo GitHub'
     slack: sumomo-inc # URL | true | string
     gmail: https://example.com/ # URL | number
     google-calendar: 1 # URL | number

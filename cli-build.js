@@ -26,7 +26,11 @@ Object.keys(grid).forEach(orgname => {
   Object.keys(services)
     .filter(service => service[0] !== '_')
     .forEach(serviceName => {
-      const url = parse(services[serviceName], orgname, serviceName)
+      const { value: url, description } = parse(
+        services[serviceName],
+        orgname,
+        serviceName
+      )
       const shortServiceName = SHORT_SERVICE_NAMES[serviceName]
 
       commands[url] = {
@@ -34,17 +38,26 @@ Object.keys(grid).forEach(orgname => {
         values: permitation(
           [orgname, shortOrgname],
           [serviceName, shortServiceName]
-        ).map(command => ({ command, uid: uuidv4() }))
+        ).map(command => ({
+          command,
+          uid: uuidv4(),
+          description: description || command.join(' ')
+        }))
       }
     })
   ;(services._customs || []).forEach(
-    ({ url, name: serviceName, short: shortServiceName }) => {
+    ({
+      url,
+      name: serviceName,
+      short: shortServiceName,
+      description = 'custom'
+    }) => {
       commands[url] = {
         uid: uuidv4(),
         values: permitation(
           [orgname, shortOrgname],
           [serviceName, shortServiceName]
-        ).map(command => ({ command, uid: uuidv4() }))
+        ).map(command => ({ command, uid: uuidv4(), description }))
       }
     }
   )
@@ -87,21 +100,24 @@ const jsonPlist = {
     }
   }, {}),
   objects: [
+    // list open url workflow destination
     ...Object.keys(commands).map(url => ({
       config: { browser: '', spaces: '', url, utf8: true },
       type: 'alfred.workflow.action.openurl',
       uid: commands[url].uid,
       version: 1
     })),
+    // lsit key input workflow source
+    //
     ...Object.values(commands)
       .map(({ values }) => values)
       .reduce((prev, current) => [...prev, ...current], [])
-      .map(({ command, uid }) => ({
+      .map(({ command, uid, description }) => ({
         config: {
           argumenttype: 1,
           keyword: command.join(' '),
           subtext: '',
-          text: command.join(' '),
+          text: description,
           withspace: true
         },
         type: 'alfred.workflow.input.keyword',
