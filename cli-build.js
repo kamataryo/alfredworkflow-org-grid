@@ -24,7 +24,7 @@ Object.keys(grid).forEach(orgname => {
   Object.keys(services)
     .filter(service => service[0] !== '_')
     .forEach(serviceName => {
-      const { value: url, description } = parse(
+      const { value: url, description: subtext } = parse(
         services[serviceName],
         orgname,
         serviceName
@@ -39,7 +39,8 @@ Object.keys(grid).forEach(orgname => {
         ).map(command => ({
           command,
           uid: uuidv4(),
-          description: description || command.join(' ')
+          subtext,
+          text: command.join(' ')
         }))
       }
     })
@@ -48,14 +49,19 @@ Object.keys(grid).forEach(orgname => {
       url,
       name: serviceName,
       short: shortServiceName,
-      description = 'custom'
+      description: subtext
     }) => {
       commands[url] = {
         uid: uuidv4(),
         values: permitation(
           [orgname, shortOrgname],
           [serviceName, shortServiceName]
-        ).map(command => ({ command, uid: uuidv4(), description }))
+        ).map(command => ({
+          command,
+          uid: uuidv4(),
+          subtext,
+          text: command.join(' ')
+        }))
       }
     }
   )
@@ -95,12 +101,12 @@ const urlObjects = Object.keys(commands).map(url => ({
 const inputObjects = Object.values(commands)
   .map(({ values }) => values)
   .reduce((prev, current) => [...prev, ...current], [])
-  .map(({ command, uid, description }) => ({
+  .map(({ command, uid, text, subtext = '' }) => ({
     config: {
       argumenttype: 1,
       keyword: command.join(' '),
-      subtext: '',
-      text: description,
+      text: command.join(' '),
+      subtext,
       withspace: true
     },
     type: 'alfred.workflow.input.keyword',

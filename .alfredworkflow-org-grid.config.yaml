@@ -24,6 +24,7 @@ grid:
     _customs:
       - name: jobcan
         short: jc
+        description: 'its description'
         url: https://example.com/jobcan
       - name: foo
         url: https://example.com/sumomo/foo
