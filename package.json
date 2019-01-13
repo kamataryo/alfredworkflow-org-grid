@@ -15,9 +15,11 @@
   "repository": "git@github.com:kamataryo/alfredworkflow-org-grid.git",
   "dependencies": {
     "alfy": "^0.8.0",
+    "axios": "^0.18.0",
     "commander": "^2.19.0",
     "js-yaml": "^3.12.1",
     "plist": "^3.0.1",
+    "rimraf": "^2.6.3",
     "uuid": "^3.3.2"
   }
 }
