@@ -9,6 +9,7 @@ const SHORT_SERVICE_NAMES = {
   gmail: 'gm',
   slack: 'sl',
   'google-calendar': 'ca',
+  'google-drive': 'gd',
   backlog: 'bl'
 }
 
