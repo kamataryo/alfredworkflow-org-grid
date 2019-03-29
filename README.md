@@ -14,5 +14,6 @@ where to put:
 ## For me
 
 ```shell
-cp ./dist/* ~/Dropbox/Alfred.alfredpreferences/workflows/test
+$ ./cli.js
+$ cp ./dist/* ~/Dropbox/Alfred.alfredpreferences/workflows/test
 ```
